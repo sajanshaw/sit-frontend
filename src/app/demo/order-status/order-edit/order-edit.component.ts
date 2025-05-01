@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { OrderService } from '../order.service';
 import { Order } from '../order';
 import { CommonModule } from '@angular/common';
@@ -8,7 +8,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-order-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule],
   templateUrl: './order-edit.component.html'
 })
 export class OrderEditComponent implements OnInit {
@@ -18,7 +18,7 @@ export class OrderEditComponent implements OnInit {
     private orderService: OrderService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const orderId = this.route.snapshot.paramMap.get('orderId')!;

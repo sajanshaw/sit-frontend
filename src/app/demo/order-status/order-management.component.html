@@ -42,7 +42,7 @@
                 </span>
               </td>
               <td>{{ order.quantity }}</td>
-              <td>${{ order.price.toFixed(2) }}</td>
+              <td>{{ order.price | currency:'INR' }}</td> <!-- Currency as INR -->
               <td>
                 <span class="badge px-3 py-2 fs-6"
                       [ngClass]="{

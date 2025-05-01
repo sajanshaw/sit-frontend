@@ -1,270 +1,162 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
-
-interface Order {
-  id: number;
-  orderNumber: string;
-  customer: string;
-  email: string;
-  phone: string;
-  status: string;
-  date: Date;
-  totalAmount: number;
-  paymentMethod: string;
-  shippingAddress: string;
-}
+import { Component, OnInit } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector:  'app-order-color',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  standalone:true,
+  imports: [CommonModule, ReactiveFormsModule,NgbPaginationModule,FormsModule ],
   templateUrl: './order-color.component.html',
   styleUrls: ['./order-color.component.scss']
-
 })
-export default class OrderManagementComponent implements OnInit {
-  @ViewChild('orderDialog') orderDialog!: TemplateRef<any>;
-
-  orders: Order[] = [
-    {
-      id: 1,
-      orderNumber: 'ORD-1001',
-      customer: 'John Doe',
-      email: 'john@example.com',
-      phone: '555-1234',
-      status: 'Pending',
-      date: new Date(),
-      totalAmount: 149.99,
-      paymentMethod: 'Credit Card',
-      shippingAddress: '123 Main St, City'
-    },
-    {
-      id: 2,
-      orderNumber: 'ORD-1002',
-      customer: 'Jane Smith',
-      email: 'jane@example.com',
-      phone: '555-5678',
-      status: 'Processing',
-      date: new Date(),
-      totalAmount: 299.95,
-      paymentMethod: 'PayPal',
-      shippingAddress: '456 Elm St, Town'
-    }
+export default class OrdersComponent implements OnInit {
+  filters = [
+    { label: 'All', value: 'all', count: 6 },
+    { label: 'Processing', value: 'processing', count: 2 },
+    { label: 'Completed', value: 'completed', count: 2 },
+    { label: 'Refund', value: 'refund', count: 2 }
   ];
 
-  orderForm!: FormGroup;
-  dialogOrder: Order | null = null;
-  dialogEditable = false;
-  step = 1;
-  maxStep = 3;
-  sortColumn: keyof Order = 'id';
-  sortAsc = true;
-  editingOrder: Order | null = null;
-  editForm!: FormGroup;
+  bulkActions = [
+    { label: 'Mark as Processed', value: 'process' },
+    { label: 'Refund Selected', value: 'refund' }
+  ];
 
-  constructor(
-    private modalService: NgbModal,
-    private fb: FormBuilder
-  ) {}
+  selectedFilter = 'all';
+  selectedBulkAction = '';
+  searchTerm = '';
 
-  ngOnInit(): void {
-    this.initializeForm();
-    this.initializeEditForm();
+  allOrders: any[] = [];
+  filteredOrders: any[] = [];
+  pagedOrders: any[] = [];
+
+  currentPage = 1;
+  pageSize = 5;
+  totalOrders = 0;
+
+  ngOnInit() {
+    this.loadDummyOrders();
+    this.updateFilterCounts();
+    this.filterOrders();
   }
 
-  initializeForm(): void {
-    this.orderForm = this.fb.group({
-      id: [null],
-      orderNumber: ['', Validators.required],
-      customer: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.pattern('[- +()0-9]+')],
-      status: ['Pending', Validators.required],
-      date: [new Date(), Validators.required],
-      totalAmount: [0, [Validators.required, Validators.min(0)]],
-      paymentMethod: ['Credit Card', Validators.required],
-      shippingAddress: ['', Validators.required]
-    });
-  }
-
-  initializeEditForm(): void {
-    this.editForm = this.fb.group({
-      customer: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      phone: new FormControl('', Validators.pattern('[- +()0-9]+')),
-      totalAmount: new FormControl(0, [Validators.required, Validators.min(0)]),
-      status: new FormControl('Pending', Validators.required)
-    });
-  }
-
-  // Getter methods for edit form controls
-  get customerControl(): FormControl {
-    return this.editForm.get('customer') as FormControl;
-  }
-
-  get emailControl(): FormControl {
-    return this.editForm.get('email') as FormControl;
-  }
-
-  get phoneControl(): FormControl {
-    return this.editForm.get('phone') as FormControl;
-  }
-
-  get totalAmountControl(): FormControl {
-    return this.editForm.get('totalAmount') as FormControl;
-  }
-
-  get statusControl(): FormControl {
-    return this.editForm.get('status') as FormControl;
-  }
-
-  sortedOrders(): Order[] {
-    return this.orders.slice().sort((a, b) => {
-      const valA = a[this.sortColumn];
-      const valB = b[this.sortColumn];
-
-      if (typeof valA === 'string' && typeof valB === 'string') {
-        return this.sortAsc ? 
-          valA.localeCompare(valB) : 
-          valB.localeCompare(valA);
+  loadDummyOrders() {
+    this.allOrders = [
+      {
+        id: 1001, customer: 'Alice Johnson', email: 'alice@example.com',
+        address: '123 Elm St', date: new Date(), status: 'Processing',
+        total: 120, paid: 120, discount: 10, tax: 5.5, shipping: 'Standard',
+        payment: 'Credit Card', items: 3, origin: 'Online',
+        notes: 'Leave at front door', selected: false
+      },
+      {
+        id: 1002, customer: 'Bob Smith', email: 'bob@example.com',
+        address: '456 Oak St', date: new Date(), status: 'Completed',
+        total: 200, paid: 200, discount: 0, tax: 10, shipping: 'Express',
+        payment: 'PayPal', items: 5, origin: 'Store',
+        notes: '', selected: false
+      },
+      {
+        id: 1003, customer: 'Charlie Brown', email: 'charlie@example.com',
+        address: '789 Pine St', date: new Date(), status: 'Refund',
+        total: 80, paid: 0, discount: 5, tax: 3, shipping: 'Standard',
+        payment: 'Credit Card', items: 2, origin: 'Online',
+        notes: 'Refund requested due to damage', selected: false
+      },
+      {
+        id: 1004, customer: 'Diana Prince', email: 'diana@example.com',
+        address: '1010 Paradise Island', date: new Date(), status: 'Processing',
+        total: 150, paid: 150, discount: 15, tax: 7, shipping: 'Same Day',
+        payment: 'Debit Card', items: 4, origin: 'Online',
+        notes: '', selected: false
+      },
+      {
+        id: 1005, customer: 'Eve Torres', email: 'eve@example.com',
+        address: '2020 Star City', date: new Date(), status: 'Completed',
+        total: 300, paid: 300, discount: 20, tax: 12, shipping: 'Express',
+        payment: 'UPI', items: 6, origin: 'Store',
+        notes: 'Gift wrapped', selected: false
       }
-      return this.sortAsc ? 
-        Number(valA) - Number(valB) : 
-        Number(valB) - Number(valA);
+    ];
+  }
+
+  updateFilterCounts() {
+    this.filters = this.filters.map(filter => {
+      const count = filter.value === 'all'
+        ? this.allOrders.length
+        : this.allOrders.filter(order => order.status.toLowerCase() === filter.value).length;
+      return { ...filter, count };
     });
   }
 
-  sort(column: keyof Order): void {
-    if (this.sortColumn === column) {
-      this.sortAsc = !this.sortAsc;
-    } else {
-      this.sortColumn = column;
-      this.sortAsc = true;
-    }
+  onFilterChange(status: string) {
+    this.selectedFilter = status;
+    this.currentPage = 1;
+    this.filterOrders();
   }
 
-  openOrderDialog(order?: Order, editable = true): void {
-    this.dialogEditable = editable;
-    this.step = 1;
-
-    if (order) {
-      this.dialogOrder = { ...order };
-      this.orderForm.patchValue({
-        ...order,
-        date: this.formatDateForInput(order.date)
-      });
-    } else {
-      this.dialogOrder = null;
-      this.orderForm.reset({
-        status: 'Pending',
-        date: this.formatDateForInput(new Date()),
-        paymentMethod: 'Credit Card'
-      });
-    }
-
-    this.modalService.open(this.orderDialog, { 
-      size: 'lg',
-      centered: true,
-      backdrop: 'static'
-    });
+  onSearch() {
+    this.currentPage = 1;
+    this.filterOrders();
   }
 
-  startEdit(order: Order): void {
-    this.editingOrder = {...order};
-    this.editForm.patchValue({
-      customer: order.customer,
-      email: order.email,
-      phone: order.phone,
-      totalAmount: order.totalAmount,
-      status: order.status
-    });
+  
+filterOrders() {
+  let orders = [...this.allOrders];
+
+  if (this.selectedFilter !== 'all') {
+    orders = orders.filter(order => order.status.toLowerCase() === this.selectedFilter);
   }
 
-  cancelEdit(): void {
-    this.editingOrder = null;
-    this.editForm.reset();
+  if (this.searchTerm.trim()) {
+    const term = this.searchTerm.trim().toLowerCase();
+    orders = orders.filter(order =>
+      order.customer.toLowerCase().includes(term) ||
+      order.id.toString().includes(term)
+    );
   }
 
-  saveEdit(): void {
-    if (this.editForm.invalid || !this.editingOrder) return;
+  this.filteredOrders = orders;
+  this.totalOrders = orders.length;
+  this.updatePagedOrders();
 
-    const updatedOrder = {
-      ...this.editingOrder,
-      ...this.editForm.value
-    };
+  // Always refresh counts after any filtering change
+  this.updateFilterCounts();
+}
 
-    const index = this.orders.findIndex(o => o.id === updatedOrder.id);
-    if (index !== -1) {
-      this.orders[index] = updatedOrder;
-    }
-    this.cancelEdit();
+  updatePagedOrders() {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    this.pagedOrders = this.filteredOrders.slice(startIndex, startIndex + this.pageSize);
   }
 
-  nextStep(): void {
-    if (this.step < this.maxStep) {
-      this.step++;
-    }
+  onPageChange(page: number) {
+    this.currentPage = page;
+    this.updatePagedOrders();
   }
 
-  prevStep(): void {
-    if (this.step > 1) {
-      this.step--;
-    }
+  toggleAll(event: any) {
+    const checked = event.target.checked;
+    this.pagedOrders.forEach(order => order.selected = checked);
   }
 
-  get isStepValid(): boolean {
-    switch (this.step) {
-      case 1:
-        return this.orderForm.get('customer')?.valid && 
-               this.orderForm.get('email')?.valid &&
-               this.orderForm.get('phone')?.valid;
-      case 2:
-        return this.orderForm.get('paymentMethod')?.valid && 
-               this.orderForm.get('totalAmount')?.valid;
-      case 3:
-        return this.orderForm.get('shippingAddress')?.valid;
+  getStatusClass(status: string) {
+    switch (status.toLowerCase()) {
+      case 'processing':
+        return 'bg-warning text-dark';
+      case 'completed':
+        return 'bg-success text-white';
+      case 'refund':
+        return 'bg-danger text-white';
       default:
-        return false;
+        return 'bg-secondary text-white';
     }
   }
 
-  saveOrder(modal: any): void {
-    if (this.orderForm.invalid) return;
+  onApplyBulkAction() {
+    if (!this.selectedBulkAction) return;
 
-    const formValue = {
-      ...this.orderForm.value,
-      date: new Date(this.orderForm.value.date)
-    };
-
-    if (formValue.id) {
-      const index = this.orders.findIndex(o => o.id === formValue.id);
-      this.orders[index] = formValue;
-    } else {
-      formValue.id = this.generateOrderId();
-      formValue.orderNumber = `ORD-${1000 + this.orders.length + 1}`;
-      this.orders.push(formValue);
-    }
-
-    modal.close();
-    this.orderForm.reset();
-  }
-
-  deleteOrder(order: Order): void {
-    const index = this.orders.findIndex(o => o.id === order.id);
-    if (index !== -1) {
-      this.orders.splice(index, 1);
-    }
-  }
-
-  private formatDateForInput(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
-
-  private generateOrderId(): number {
-    return this.orders.length > 0 ? 
-      Math.max(...this.orders.map(o => o.id)) + 1 : 
-      1;
+    const selectedOrders = this.allOrders.filter(o => o.selected);
+    console.log('Applying bulk action:', this.selectedBulkAction, selectedOrders);
   }
 }

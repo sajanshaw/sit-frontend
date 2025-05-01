@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Order } from './order';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
+  private ordersSource = new BehaviorSubject<any[]>([]);
+  orders$ = this.ordersSource.asObservable();
   private orders: Order[] = [
     {
       orderId: '1001',
@@ -67,5 +69,15 @@ export class OrderService {
   delete(orderId: string): Observable<void> {
     this.orders = this.orders.filter(o => o.orderId !== orderId);
     return of();
+  }
+
+  setInitialOrders(orders: any[]) {
+    if (this.ordersSource.value.length === 0) {
+      this.ordersSource.next(orders);
+    }
+  }
+  addOrder(newOrder: any) {
+    const current = this.ordersSource.value;
+    this.ordersSource.next([...current, newOrder]);
   }
 }

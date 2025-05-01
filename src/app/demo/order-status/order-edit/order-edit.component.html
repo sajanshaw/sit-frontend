@@ -50,7 +50,7 @@
         <input class="form-control" required [(ngModel)]="order.phone" name="phone">
       </div>
       <button class="btn btn-success" type="submit">Save</button>
-      <a class="btn btn-secondary ms-2" routerLink="/orders">Cancel</a>
+      <a class="btn btn-secondary ms-2" [routerLink]="['/orders/status']">Cancel</a>
     </form>
   </div>
   

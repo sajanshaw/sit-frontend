@@ -3,11 +3,12 @@ import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { OrderService } from './order.service';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule],
   templateUrl: './order-management.component.html',
 
 })
@@ -26,8 +27,15 @@ export default class OrdersComponent {
   @ViewChild('viewModal') viewModal!: TemplateRef<any>;
   @ViewChild('editModal') editModal!: TemplateRef<any>;
 
-  constructor(private modalService: NgbModal) {}
+  constructor(private modalService: NgbModal, private orderService: OrderService) { };
 
+  ngOnInit() {
+
+    this.orderService.setInitialOrders(this.orders);
+    this.orderService.orders$.subscribe(updatedOrders => {
+      this.orders = updatedOrders;
+    });
+  }
   get filteredOrders() {
     const text = this.filterText.toLowerCase();
     return this.orders.filter(o =>

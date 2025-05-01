@@ -8,10 +8,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-order-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule,RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule],
   templateUrl: './order-create.component.html'
 })
-export  default class OrderCreateComponent {
+export default class OrderCreateComponent {
   order: Order = {
     orderId: '',
     customerName: '',
@@ -25,9 +25,11 @@ export  default class OrderCreateComponent {
     phone: ''
   };
 
-  constructor(private orderService: OrderService, private router: Router) {}
+  constructor(private orderService: OrderService, private router: Router) { }
 
   submit() {
-    this.orderService.create(this.order).subscribe(() => this.router.navigate(['/orders/status']));
+    //   this.orderService.create(this.order).subscribe(() => this.router.navigate(['/orders/status']));
+    this.orderService.addOrder(this.order); // update BehaviorSubject
+    this.router.navigate(['/orders/status']); // navigate after update
   }
 }
