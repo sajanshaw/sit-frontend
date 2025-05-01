@@ -32,8 +32,7 @@
               <td>{{ order.orderDate }}</td>
               <td>{{ order.estimatedDelivery }}</td>
               <td>
-                <span class="badge px-3 py-2 fs-6"
-                      [ngClass]="{
+                <span class="badge px-3 py-2 fs-6" [ngClass]="{
                         'bg-warning text-dark': order.status === 'In Progress',
                         'bg-success': order.status === 'Delivered',
                         'bg-danger': order.status === 'Cancelled'
@@ -44,8 +43,7 @@
               <td>{{ order.quantity }}</td>
               <td>{{ order.price | currency:'INR' }}</td> <!-- Currency as INR -->
               <td>
-                <span class="badge px-3 py-2 fs-6"
-                      [ngClass]="{
+                <span class="badge px-3 py-2 fs-6" [ngClass]="{
                         'bg-success': order.paymentStatus === 'Paid',
                         'bg-secondary': order.paymentStatus === 'Pending',
                         'bg-info text-dark': order.paymentStatus === 'Refunded'
@@ -58,13 +56,11 @@
               <td class="text-center">
                 <div class="d-flex justify-content-center gap-2">
                   <a class="btn btn-sm btn-outline-primary rounded-circle"
-                     [routerLink]="['/orders', order.orderId, 'edit']"
-                     title="Edit">
+                    [routerLink]="['/orders', order.orderId, 'edit']" title="Edit">
                     <i class="bi bi-pencil"></i>
                   </a>
-                  <button class="btn btn-sm btn-outline-danger rounded-circle"
-                          (click)="deleteOrder(order.orderId)"
-                          title="Delete">
+                  <button class="btn btn-sm btn-outline-danger rounded-circle" (click)="deleteOrder(order.orderId)"
+                    title="Delete">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>

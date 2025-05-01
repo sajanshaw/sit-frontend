@@ -14,9 +14,11 @@ import { OrderService } from './order.service';
 })
 export default class OrdersComponent {
   orders = [
-    { orderId: '1001', customerName: 'John Doe', orderDate: '2024-04-01', estimatedDelivery: '2024-04-05', status: 'In Progress', quantity: 10, price: 150, paymentStatus: 'Paid', email: 'john@example.com', phone: '1234567890' },
-    { orderId: '1002', customerName: 'Jane Smith', orderDate: '2024-03-28', estimatedDelivery: '2024-04-03', status: 'Delivered', quantity: 5, price: 75, paymentStatus: 'Pending', email: 'jane@example.com', phone: '0987654321' },
-    // more...
+    { orderId: '1001', customerName: 'Alice Johnson', orderDate: '2024-04-01', estimatedDelivery: '2024-04-05', status: 'In Progress', quantity: 10, price: 150, paymentStatus: 'Paid', email: 'alice@sit.com', phone: '1234567890' },
+    { orderId: '1002', customerName: 'Bob Smith', orderDate: '2024-03-28', estimatedDelivery: '2024-04-03', status: 'Delivered', quantity: 5, price: 75, paymentStatus: 'Pending', email: 'bob@sit.com', phone: '0987654321' },
+    { orderId: '1003', customerName: 'Charlie Brown', orderDate: '2024-03-28', estimatedDelivery: '2024-04-03', status: 'Delivered', quantity: 5, price: 75, paymentStatus: 'Pending', email: 'charli@sit.com', phone: '0987654321' },
+    { orderId: '1004', customerName: 'Diana Prince', orderDate: '2024-03-28', estimatedDelivery: '2024-04-03', status: 'Delivered', quantity: 5, price: 75, paymentStatus: 'Pending', email: 'dian@sit.com', phone: '0987654321' },
+    { orderId: '1005', customerName: 'Eve Torres', orderDate: '2024-03-28', estimatedDelivery: '2024-04-03', status: 'Delivered', quantity: 5, price: 75, paymentStatus: 'Pending', email: 'eve@sit.com', phone: '0987654321' },
   ];
 
   filterText = '';

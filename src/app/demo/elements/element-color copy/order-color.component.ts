@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector:  'app-order-color',
   standalone:true,
-  imports: [CommonModule, ReactiveFormsModule,NgbPaginationModule,FormsModule ],
+  imports: [CommonModule, ReactiveFormsModule,NgbPaginationModule,FormsModule,RouterModule ],
   templateUrl: './order-color.component.html',
   styleUrls: ['./order-color.component.scss']
 })
@@ -44,39 +45,39 @@ export default class OrdersComponent implements OnInit {
   loadDummyOrders() {
     this.allOrders = [
       {
-        id: 1001, customer: 'Alice Johnson', email: 'alice@example.com',
+        id: 1001, customer: 'Alice Johnson', email: 'alice@sit.com',
         address: '123 Elm St', date: new Date(), status: 'Processing',
         total: 120, paid: 120, discount: 10, tax: 5.5, shipping: 'Standard',
         payment: 'Credit Card', items: 3, origin: 'Online',
         notes: 'Leave at front door', selected: false
       },
       {
-        id: 1002, customer: 'Bob Smith', email: 'bob@example.com',
+        id: 1002, customer: 'Bob Smith', email: 'bob@sit.com',
         address: '456 Oak St', date: new Date(), status: 'Completed',
         total: 200, paid: 200, discount: 0, tax: 10, shipping: 'Express',
-        payment: 'PayPal', items: 5, origin: 'Store',
+        payment: 'PhonePe', items: 5, origin: 'Store',
         notes: '', selected: false
       },
       {
-        id: 1003, customer: 'Charlie Brown', email: 'charlie@example.com',
+        id: 1003, customer: 'Charlie Brown', email: 'charli@sit.com',
         address: '789 Pine St', date: new Date(), status: 'Refund',
         total: 80, paid: 0, discount: 5, tax: 3, shipping: 'Standard',
         payment: 'Credit Card', items: 2, origin: 'Online',
         notes: 'Refund requested due to damage', selected: false
       },
       {
-        id: 1004, customer: 'Diana Prince', email: 'diana@example.com',
+        id: 1004, customer: 'Diana Prince', email: 'dian@sit.com',
         address: '1010 Paradise Island', date: new Date(), status: 'Processing',
         total: 150, paid: 150, discount: 15, tax: 7, shipping: 'Same Day',
         payment: 'Debit Card', items: 4, origin: 'Online',
         notes: '', selected: false
       },
       {
-        id: 1005, customer: 'Eve Torres', email: 'eve@example.com',
+        id: 1005, customer: 'Eve Torres', email: 'eve@sit.com',
         address: '2020 Star City', date: new Date(), status: 'Completed',
         total: 300, paid: 300, discount: 20, tax: 12, shipping: 'Express',
-        payment: 'UPI', items: 6, origin: 'Store',
-        notes: 'Gift wrapped', selected: false
+        payment: 'PhonePe', items: 6, origin: 'Store',
+        notes: 'Breakdown', selected: false
       }
     ];
   }

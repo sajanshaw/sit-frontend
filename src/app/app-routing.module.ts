@@ -25,10 +25,6 @@ const routes: Routes = [
         loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent)
       },
       {
-        path: 'typography',
-        loadComponent: () => import('./demo/elements/typography/typography.component')
-      },
-      {
         path: 'orders/overview',
         loadComponent: () => import('./demo/elements/element-color copy/order-color.component')
       },
@@ -50,10 +46,6 @@ const routes: Routes = [
         path: 'orders/:orderId/view',
         loadComponent: () => import('./demo/order-status/order-view/order-view.component').then(m => m.OrderViewComponent)
       },
-      {
-        path: 'sample-page',
-        loadComponent: () => import('./demo/other/sample-page/sample-page.component')
-      }
     ]
   },
   {
