@@ -1,0 +1,56 @@
+<div class="container mt-3" *ngIf="order">
+    <h2>Edit Order</h2>
+    <form (ngSubmit)="submit()">
+      <div class="mb-2">
+        <label class="form-label">Order ID</label>
+        <input class="form-control" required [(ngModel)]="order.orderId" name="orderId" readonly>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Customer Name</label>
+        <input class="form-control" required [(ngModel)]="order.customerName" name="customerName">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Order Date</label>
+        <input class="form-control" type="date" required [(ngModel)]="order.orderDate" name="orderDate">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Estimated Delivery Date</label>
+        <input class="form-control" type="date" required [(ngModel)]="order.estimatedDelivery" name="estimatedDelivery">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Status</label>
+        <select class="form-select" [(ngModel)]="order.status" name="status">
+          <option>In Progress</option>
+          <option>Delivered</option>
+          <option>Cancelled</option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Quantity</label>
+        <input class="form-control" type="number" required [(ngModel)]="order.quantity" name="quantity">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Price</label>
+        <input class="form-control" type="number" required [(ngModel)]="order.price" name="price">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Payment Status</label>
+        <select class="form-select" [(ngModel)]="order.paymentStatus" name="paymentStatus">
+          <option>Paid</option>
+          <option>Pending</option>
+          <option>Refunded</option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Customer Email</label>
+        <input class="form-control" type="email" required [(ngModel)]="order.email" name="email">
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Customer Phone</label>
+        <input class="form-control" required [(ngModel)]="order.phone" name="phone">
+      </div>
+      <button class="btn btn-success" type="submit">Save</button>
+      <a class="btn btn-secondary ms-2" routerLink="/orders">Cancel</a>
+    </form>
+  </div>
+  

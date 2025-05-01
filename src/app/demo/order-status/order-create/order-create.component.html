@@ -1,0 +1,74 @@
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-7 col-md-9">
+        <div class="card shadow-sm rounded-4 border-0">
+          <div class="card-body p-4">
+            <h4 class="fw-semibold text-primary mb-4">
+              <i class="bi bi-plus-circle me-2"></i>Create Order
+            </h4>
+            <form #orderForm="ngForm" (ngSubmit)="submit()" autocomplete="off">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Order ID</label>
+                  <input class="form-control" required [(ngModel)]="order.orderId" name="orderId" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Customer Name</label>
+                  <input class="form-control" required [(ngModel)]="order.customerName" name="customerName" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Order Date</label>
+                  <input class="form-control" type="date" required [(ngModel)]="order.orderDate" name="orderDate" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Estimated Delivery Date</label>
+                  <input class="form-control" type="date" required [(ngModel)]="order.estimatedDelivery" name="estimatedDelivery" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" required [(ngModel)]="order.status" name="status">
+                    <option value="In Progress">In Progress</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Quantity</label>
+                  <input class="form-control" type="number" min="1" required [(ngModel)]="order.quantity" name="quantity" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Price</label>
+                  <input class="form-control" type="number" min="0" required [(ngModel)]="order.price" name="price" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Payment Status</label>
+                  <select class="form-select" required [(ngModel)]="order.paymentStatus" name="paymentStatus">
+                    <option value="Paid">Paid</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Refunded">Refunded</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Customer Email</label>
+                  <input class="form-control" type="email" required [(ngModel)]="order.email" name="email" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Customer Phone</label>
+                  <input class="form-control" required [(ngModel)]="order.phone" name="phone" />
+                </div>
+              </div>
+              <div class="d-flex justify-content-end gap-2 mt-4">
+                <button class="btn btn-success px-4" type="submit" [disabled]="orderForm.invalid">
+                  <i class="bi bi-check-circle me-2"></i>Create
+                </button>
+                <a class="btn btn-secondary px-4" [routerLink]="['/orders/status']">
+                  <i class="bi bi-x-circle me-2"></i>Cancel
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

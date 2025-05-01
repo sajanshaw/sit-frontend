@@ -1,0 +1,58 @@
+<div class="container mt-3" *ngIf="order">
+    <h2>Order Details</h2>
+    <div class="card">
+      <div class="card-body">
+        <dl class="row">
+          <dt class="col-sm-3">Order ID</dt>
+          <dd class="col-sm-9">{{order.orderId}}</dd>
+  
+          <dt class="col-sm-3">Customer Name</dt>
+          <dd class="col-sm-9">{{order.customerName}}</dd>
+  
+          <dt class="col-sm-3">Order Date</dt>
+          <dd class="col-sm-9">{{order.orderDate}}</dd>
+  
+          <dt class="col-sm-3">Estimated Delivery Date</dt>
+          <dd class="col-sm-9">{{order.estimatedDelivery}}</dd>
+  
+          <dt class="col-sm-3">Status</dt>
+          <dd class="col-sm-9">
+            <span class="badge"
+                  [ngClass]="{
+                    'bg-warning': order.status === 'In Progress',
+                    'bg-success': order.status === 'Delivered',
+                    'bg-danger': order.status === 'Cancelled'
+                  }">
+              {{order.status}}
+            </span>
+          </dd>
+  
+          <dt class="col-sm-3">Quantity</dt>
+          <dd class="col-sm-9">{{order.quantity}}</dd>
+  
+          <dt class="col-sm-3">Price</dt>
+          <dd class="col-sm-9">${{order.price.toFixed(2)}}</dd>
+  
+          <dt class="col-sm-3">Payment Status</dt>
+          <dd class="col-sm-9">
+            <span class="badge"
+                  [ngClass]="{
+                    'bg-success': order.paymentStatus === 'Paid',
+                    'bg-secondary': order.paymentStatus === 'Pending',
+                    'bg-info': order.paymentStatus === 'Refunded'
+                  }">
+              {{order.paymentStatus}}
+            </span>
+          </dd>
+  
+          <dt class="col-sm-3">Customer Email</dt>
+          <dd class="col-sm-9">{{order.email}}</dd>
+  
+          <dt class="col-sm-3">Customer Phone</dt>
+          <dd class="col-sm-9">{{order.phone}}</dd>
+        </dl>
+        <a class="btn btn-secondary mt-2" routerLink="/orders">Back to List</a>
+      </div>
+    </div>
+  </div>
+  

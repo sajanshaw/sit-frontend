@@ -1,0 +1,251 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card shadow-sm mb-4 border-0">
+      <div class="card-header bg-transparent d-flex justify-content-between align-items-center border-bottom px-4 py-3">
+        <div class="d-flex align-items-center">
+          <h5 class="mb-0 text-primary me-3"> <i class="ti ti-layout-dashboard me-2"></i>Order Management</h5>
+          <button class="btn btn-primary btn-icon" (click)="openOrderDialog()">Add Order
+            <i class="mdi mdi-plus"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th (click)="sort('orderNumber')" class="cursor-pointer fw-medium text-uppercase text-secondary">
+                  Order #
+                  <i *ngIf="sortColumn==='orderNumber'" class="ms-1 mdi" [ngClass]="sortAsc ? 'mdi-arrow-up' : 'mdi-arrow-down'"></i>
+                </th>
+                <th (click)="sort('customer')" class="cursor-pointer fw-medium text-uppercase text-secondary">
+                  Customer
+                  <i *ngIf="sortColumn==='customer'" class="ms-1 mdi" [ngClass]="sortAsc ? 'mdi-arrow-up' : 'mdi-arrow-down'"></i>
+                </th>
+                <th (click)="sort('email')" class="cursor-pointer fw-medium text-uppercase text-secondary">
+                  Email
+                  <i *ngIf="sortColumn==='email'" class="ms-1 mdi" [ngClass]="sortAsc ? 'mdi-arrow-up' : 'mdi-arrow-down'"></i>
+                </th>
+                <th (click)="sort('totalAmount')" class="cursor-pointer fw-medium text-uppercase text-secondary">
+                  Amount
+                  <i *ngIf="sortColumn==='totalAmount'" class="ms-1 mdi" [ngClass]="sortAsc ? 'mdi-arrow-up' : 'mdi-arrow-down'"></i>
+                </th>
+                <th (click)="sort('status')" class="cursor-pointer fw-medium text-uppercase text-secondary">
+                  Status
+                  <i *ngIf="sortColumn==='status'" class="ms-1 mdi" [ngClass]="sortAsc ? 'mdi-arrow-up' : 'mdi-arrow-down'"></i>
+                </th>
+                <th (click)="sort('date')" class="cursor-pointer fw-medium text-uppercase text-secondary">
+                  Date
+                  <i *ngIf="sortColumn==='date'" class="ms-1 mdi" [ngClass]="sortAsc ? 'mdi-arrow-up' : 'mdi-arrow-down'"></i>
+                </th>
+                <th class="fw-medium text-uppercase text-secondary">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of sortedOrders()" [class.edit-row]="editingOrder?.id === order.id">
+                <!-- Order Number -->
+                <td class="text-secondary">{{ order.orderNumber }}</td>
+
+                <!-- Customer -->
+                <td>
+                  <div *ngIf="editingOrder?.id !== order.id">{{ order.customer }}</div>
+                  <input *ngIf="editingOrder?.id === order.id" 
+                        [formControl]="customerControl"
+                        class="form-control form-control-sm">
+                </td>
+
+                <!-- Email -->
+                <td>
+                  <div *ngIf="editingOrder?.id !== order.id">{{ order.email }}</div>
+                  <input *ngIf="editingOrder?.id === order.id" 
+                        type="email"
+                        [formControl]="emailControl"
+                        class="form-control form-control-sm">
+                </td>
+
+                <!-- Amount -->
+                <td>
+                  <div *ngIf="editingOrder?.id !== order.id">{{ order.totalAmount | currency }}</div>
+                  <input *ngIf="editingOrder?.id === order.id" 
+                        type="number"
+                        [formControl]="totalAmountControl"
+                        class="form-control form-control-sm">
+                </td>
+
+                <!-- Status -->
+                <td>
+                  <div *ngIf="editingOrder?.id !== order.id">
+                    <span class="badge rounded-pill py-2 px-3"
+                          [ngClass]="{
+                            'bg-light-warning text-warning': order.status === 'Pending',
+                            'bg-light-info text-info': order.status === 'Processing',
+                            'bg-light-primary text-primary': order.status === 'Shipped',
+                            'bg-light-success text-success': order.status === 'Delivered'
+                          }">
+                      {{ order.status }}
+                    </span>
+                  </div>
+                  <select *ngIf="editingOrder?.id === order.id" 
+                          [formControl]="statusControl"
+                          class="form-select form-select-sm">
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                  </select>
+                </td>
+
+                <!-- Date -->
+                <td class="text-secondary">{{ order.date | date:'MMM d, y' }}</td>
+
+                <!-- Actions -->
+                <td>
+                  <div class="d-flex gap-2">
+                    <div *ngIf="editingOrder?.id !== order.id">
+                      <button class="btn btn-icon btn-sm" 
+                              (click)="startEdit(order)"
+                              tooltip="Edit Order">
+                        <i class="mdi mdi-pencil-outline text-secondary"></i>
+                      </button>
+                      <button class="btn btn-icon btn-sm" 
+                              (click)="openOrderDialog(order, false)"
+                              tooltip="View Details">
+                        <i class="mdi mdi-eye-outline text-primary"></i>
+                      </button>
+                      <button class="btn btn-icon btn-sm" 
+                              (click)="deleteOrder(order)"
+                              tooltip="Delete Order">
+                        <i class="mdi mdi-delete-outline text-danger"></i>
+                      </button>
+                    </div>
+
+                    <div *ngIf="editingOrder?.id === order.id" class="d-flex gap-2">
+                      <button class="btn btn-icon btn-sm" 
+                              (click)="saveEdit()"
+                              tooltip="Save Changes"
+                              [disabled]="editForm.invalid">
+                        <i class="mdi mdi-content-save-check-outline text-success"></i>
+                      </button>
+                      <button class="btn btn-icon btn-sm" 
+                              (click)="cancelEdit()"
+                              tooltip="Cancel Edit">
+                        <i class="mdi mdi-close-circle-outline text-danger"></i>
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Order Dialog Modal -->
+<ng-template #orderDialog let-modal>
+  <div class="modal-content border-0">
+    <div class="modal-header bg-light-primary p-4 border-bottom">
+      <h5 class="modal-title text-primary">
+        {{ dialogEditable ? (dialogOrder?.id ? 'Edit Order' : 'Create Order') : 'View Order' }}
+      </h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body p-4">
+      <form *ngIf="dialogEditable && orderForm" [formGroup]="orderForm">
+        <div [ngSwitch]="step">
+          <!-- Step 1: Basic Info -->
+          <div *ngSwitchCase="1">
+            <div class="mb-3">
+              <label class="form-label fw-medium text-secondary">Customer</label>
+              <input formControlName="customer" class="form-control border-light" [readonly]="!dialogEditable" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium text-secondary">Email</label>
+              <input formControlName="email" class="form-control border-light" [readonly]="!dialogEditable" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium text-secondary">Phone</label>
+              <input formControlName="phone" class="form-control border-light" [readonly]="!dialogEditable" />
+            </div>
+          </div>
+          
+          <!-- Step 2: Payment & Amount -->
+          <div *ngSwitchCase="2">
+            <div class="mb-3">
+              <label class="form-label fw-medium text-secondary">Payment Method</label>
+              <select formControlName="paymentMethod" class="form-select border-light" [disabled]="!dialogEditable">
+                <option value="Credit Card">Credit Card</option>
+                <option value="PayPal">PayPal</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium text-secondary">Total Amount</label>
+              <input type="number" formControlName="totalAmount" class="form-control border-light" [readonly]="!dialogEditable" />
+            </div>
+          </div>
+
+          <!-- Step 3: Shipping & Finalize -->
+          <div *ngSwitchCase="3">
+            <div class="mb-3">
+              <label class="form-label fw-medium text-secondary">Shipping Address</label>
+              <textarea formControlName="shippingAddress" class="form-control border-light" [readonly]="!dialogEditable"></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-medium text-secondary">Order Status</label>
+              <select formControlName="status" class="form-select border-light" [disabled]="!dialogEditable">
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </form>
+      
+      <div *ngIf="!dialogEditable">
+        <div class="mb-3"><strong class="text-secondary">Order Number:</strong> {{ dialogOrder?.orderNumber }}</div>
+        <div class="mb-3"><strong class="text-secondary">Customer:</strong> {{ dialogOrder?.customer }}</div>
+        <div class="mb-3"><strong class="text-secondary">Email:</strong> {{ dialogOrder?.email }}</div>
+        <div class="mb-3"><strong class="text-secondary">Phone:</strong> {{ dialogOrder?.phone }}</div>
+        <div class="mb-3"><strong class="text-secondary">Status:</strong> {{ dialogOrder?.status }}</div>
+        <div class="mb-3"><strong class="text-secondary">Date:</strong> {{ dialogOrder?.date | date:'MMM d, y' }}</div>
+        <div class="mb-3"><strong class="text-secondary">Total Amount:</strong> {{ dialogOrder?.totalAmount | currency }}</div>
+        <div class="mb-3"><strong class="text-secondary">Payment Method:</strong> {{ dialogOrder?.paymentMethod }}</div>
+        <div class="mb-3"><strong class="text-secondary">Shipping Address:</strong> {{ dialogOrder?.shippingAddress }}</div>
+      </div>
+    </div>
+    
+    <div class="modal-footer p-4 border-top">
+      <div class="w-100 d-flex justify-content-between">
+        <div>
+          <button *ngIf="dialogEditable && step > 1" 
+                  class="btn btn-secondary" 
+                  (click)="prevStep()">
+            <i class="mdi mdi-chevron-left me-2"></i>Previous
+          </button>
+        </div>
+        
+        <div>
+          <button *ngIf="dialogEditable && step < maxStep" 
+                  class="btn btn-primary" 
+                  (click)="nextStep()"
+                  [disabled]="!isStepValid">
+            Next<i class="mdi mdi-chevron-right ms-2"></i>
+          </button>
+          
+          <button *ngIf="dialogEditable && step === maxStep" 
+                  class="btn btn-success" 
+                  (click)="saveOrder(modal)"
+                  [disabled]="orderForm.invalid">
+            <i class="mdi mdi-content-save-check-outline me-2"></i>
+            {{ dialogOrder?.id ? 'Update' : 'Create' }} Order
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

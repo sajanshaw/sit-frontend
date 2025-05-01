@@ -34,94 +34,132 @@ export const NavigationItems: NavigationItem[] = [
     ]
   },
   {
-    id: 'page',
-    title: 'Pages',
+    id: 'group-order-management',
+    title: 'Order Management',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'icon-order-management',
     children: [
       {
-        id: 'Authentication',
-        title: 'Authentication',
-        type: 'collapse',
-        icon: 'ti ti-key',
-        children: [
-          {
-            id: 'login',
-            title: 'Login',
-            type: 'item',
-            url: '/guest/login',
-            target: true,
-            breadcrumbs: false
-          },
-          {
-            id: 'register',
-            title: 'Register',
-            type: 'item',
-            url: '/guest/register',
-            target: true,
-            breadcrumbs: false
-          }
-        ]
+        id: 'orders-overview',
+        title: 'Order Overview',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/orders/overview',
+        icon: 'ti ti-shopping-cart',
+        breadcrumbs: false
+      },
+      {
+        id: 'order-status',
+        title: 'Order Status',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/orders/status',
+        icon: 'ti ti-check-circle',
+        breadcrumbs: false
       }
     ]
   },
   {
-    id: 'elements',
-    title: 'Elements',
+    id: 'group-truck-management',
+    title: 'Truck Management',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'icon-truck-management',
     children: [
       {
-        id: 'typography',
-        title: 'Typography',
+        id: 'truck-overview',
+        title: 'Truck Overview',
         type: 'item',
         classes: 'nav-item',
-        url: '/typography',
-        icon: 'ti ti-typography'
+        url: '/trucks/overview',
+        icon: 'ti ti-truck',
+        breadcrumbs: false
       },
       {
-        id: 'color',
-        title: 'Colors',
+        id: 'truck-expenses',
+        title: 'Truck Expenses',
         type: 'item',
         classes: 'nav-item',
-        url: '/color',
-        icon: 'ti ti-brush'
-      },
-      {
-        id: 'tabler',
-        title: 'Tabler',
-        type: 'item',
-        classes: 'nav-item',
-        url: 'https://tabler-icons.io/',
-        icon: 'ti ti-plant-2',
-        target: true,
-        external: true
+        url: '/trucks/expenses',
+        icon: 'ti ti-wallet',
+        breadcrumbs: false
       }
     ]
   },
   {
-    id: 'other',
-    title: 'Other',
+    id: 'group-driver-management',
+    title: 'Driver Management',
     type: 'group',
-    icon: 'icon-navigation',
+    icon: 'icon-driver-management',
     children: [
       {
-        id: 'sample-page',
-        title: 'Sample Page',
+        id: 'drivers-overview',
+        title: 'Driver Overview',
         type: 'item',
-        url: '/sample-page',
         classes: 'nav-item',
-        icon: 'ti ti-brand-chrome'
+        url: '/drivers/overview',
+        icon: 'ti ti-user',
+        breadcrumbs: false
       },
       {
-        id: 'document',
-        title: 'Document',
+        id: 'driver-performance',
+        title: 'Driver Performance',
         type: 'item',
         classes: 'nav-item',
-        url: 'https://codedthemes.gitbook.io/berry-angular/',
-        icon: 'ti ti-vocabulary',
-        target: true,
-        external: true
+        url: '/drivers/performance',
+        icon: 'ti ti-stats',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
+    id: 'group-expense-management',
+    title: 'Expense Management',
+    type: 'group',
+    icon: 'icon-expense-management',
+    children: [
+      {
+        id: 'expense-overview',
+        title: 'Expense Overview',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/expenses/overview',
+        icon: 'ti ti-credit-card',
+        breadcrumbs: false
+      },
+      {
+        id: 'expense-report',
+        title: 'Expense Report',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/expenses/report',
+        icon: 'ti ti-file',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
+    id: 'group-trip-tracking',
+    title: 'Trip Tracking',
+    type: 'group',
+    icon: 'icon-trip-tracking',
+    children: [
+      {
+        id: 'trip-overview',
+        title: 'Trip Overview',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/trips/overview',
+        icon: 'ti ti-map',
+        breadcrumbs: false
+      },
+      {
+        id: 'trip-details',
+        title: 'Trip Details',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/trips/details',
+        icon: 'ti ti-map-pin',
+        breadcrumbs: false
       }
     ]
   }

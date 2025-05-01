@@ -1,0 +1,82 @@
+<div class="container-fluid mt-4">
+  <div class="card shadow-sm rounded-4 border-0">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0 fw-semibold text-primary">Orders</h4>
+        <a class="btn btn-primary rounded-pill px-4" [routerLink]="['/orders/create']">
+          <i class="bi bi-plus-lg me-2"></i>Create Order
+        </a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Order ID</th>
+              <th>Customer Name</th>
+              <th>Order Date</th>
+              <th>Estimated Delivery Date</th>
+              <th>Status</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Payment Status</th>
+              <th>Customer Email</th>
+              <th>Customer Phone</th>
+              <th class="text-center" style="width: 130px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orders">
+              <td class="fw-semibold text-dark">{{ order.orderId }}</td>
+              <td>{{ order.customerName }}</td>
+              <td>{{ order.orderDate }}</td>
+              <td>{{ order.estimatedDelivery }}</td>
+              <td>
+                <span class="badge px-3 py-2 fs-6"
+                      [ngClass]="{
+                        'bg-warning text-dark': order.status === 'In Progress',
+                        'bg-success': order.status === 'Delivered',
+                        'bg-danger': order.status === 'Cancelled'
+                      }">
+                  {{ order.status }}
+                </span>
+              </td>
+              <td>{{ order.quantity }}</td>
+              <td>${{ order.price.toFixed(2) }}</td>
+              <td>
+                <span class="badge px-3 py-2 fs-6"
+                      [ngClass]="{
+                        'bg-success': order.paymentStatus === 'Paid',
+                        'bg-secondary': order.paymentStatus === 'Pending',
+                        'bg-info text-dark': order.paymentStatus === 'Refunded'
+                      }">
+                  {{ order.paymentStatus }}
+                </span>
+              </td>
+              <td>{{ order.email }}</td>
+              <td>{{ order.phone }}</td>
+              <td class="text-center">
+                <div class="d-flex justify-content-center gap-2">
+                  <a class="btn btn-sm btn-outline-primary rounded-circle"
+                     [routerLink]="['/orders', order.orderId, 'edit']"
+                     title="Edit">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <button class="btn btn-sm btn-outline-danger rounded-circle"
+                          (click)="deleteOrder(order.orderId)"
+                          title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="orders.length === 0">
+              <td colspan="11" class="text-center text-muted py-4">No orders found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
